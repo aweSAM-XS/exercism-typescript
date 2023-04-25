@@ -1,6 +1,7 @@
 {
   "display": "Configuration for Exercism TypeScript Exercises",
   "compilerOptions": {
+      "outDir": "./dist",
     // Allows you to use the newest syntax, and have access to console.log
     // https://www.typescriptlang.org/tsconfig#lib
     "lib": ["ESNEXT", "dom"],
