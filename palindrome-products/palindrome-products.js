@@ -2,24 +2,7 @@
 exports.__esModule = true;
 exports.generate = void 0;
 function createRange(max, min) {
-    var range = [];
-    if (max < min) {
-        throw new Error('min must be <= max');
-    }
-    for (var i = min; i <= max; i++) {
-        range.push(i);
-    }
-    return range;
-}
-function createrange(max, min) {
-    var range = [];
-    if (max < min) {
-        throw new Error('min must be <= max');
-    }
-    for (var i = min; i <= max; i++) {
-        range.push(i);
-    }
-    return range;
+    return Array.from({ length: max + 1 - min }, function (_, index) { return min + index; });
 }
 function createProducts(range) {
     var productList = [];
@@ -56,19 +39,22 @@ function minMaxPalindromes(products) {
 }
 function generateFactors(num, range) {
     var factors = [];
-    for (var _i = 0, range_1 = range; _i < range_1.length; _i++) {
-        var x = range_1[_i];
+    range.forEach(function (x) {
         if (num % x === 0 && x <= Math.sqrt(num)) {
             if (range.includes(num / x)) {
                 var pair = [x, num / x];
                 factors.push(pair);
             }
         }
-    }
+    });
     return factors;
 }
 function generate(_a) {
-    var maxFactor = _a.maxFactor, _b = _a.minFactor, minFactor = _b === void 0 ? 0 : _b;
+    var maxFactor = _a.maxFactor, minFactor = _a.minFactor;
+    if (!minFactor || !maxFactor)
+        throw new Error("Must provide 'minfactor' and 'maxfactor' in params object");
+    if (minFactor > maxFactor)
+        throw new Error('min must be <= max');
     var range = createRange(maxFactor, minFactor);
     var products = createProducts(range);
     var minMaxPalindrome = minMaxPalindromes(products);
@@ -85,7 +71,8 @@ function generate(_a) {
 }
 exports.generate = generate;
 var palindromes = generate({
-    maxFactor: 9
+    maxFactor: 15,
+    minFactor: 15
 });
 console.log(palindromes);
 console.log(palindromes.smallest.factors);

@@ -1,6 +1,6 @@
 interface Input {
     maxFactor: number;
-    minFactor?: number;
+    minFactor: number;
 }
 
 interface Palindromes {
@@ -15,25 +15,7 @@ interface Palindromes {
 }
 
 function createRange(max: number, min: number): number[] {
-    const range: number[] = [];
-    if (max < min) {
-        throw new Error('min must be <= max');
-    }
-    for (let i = min; i <= max; i++) {
-        range.push(i);
-    }
-    return range;
-}
-
-function createrange(max: number, min: number): number[] {
-    const range: number[] = [];
-    if (max < min) {
-        throw new Error('min must be <= max');
-    }
-    for (let i = min; i <= max; i++) {
-        range.push(i);
-    }
-    return range;
+    return Array.from({length: max+1 - min}, (_, index) => min + index);
 }
 
 function createProducts(range: number[]): number[] {
@@ -74,18 +56,23 @@ function minMaxPalindromes(products: number[]): Palindromes {
 function generateFactors(num: number, range: number[]): number[][] {
     let factors: number[][] = [];
 
-    for (let x of range) {
+    range.forEach((x) => {
         if (num % x === 0 && x <= Math.sqrt(num)) {
             if (range.includes(num / x)) {
                 let pair = [x, num / x];
                 factors.push(pair);
             }
         }
-    }
+    });
     return factors;
 }
 
-export function generate({ maxFactor, minFactor = 0 }: Input): Palindromes {
+export function generate({ maxFactor, minFactor }: Input): Palindromes {
+    if (!minFactor || !maxFactor)
+        throw new Error(
+            "Must provide 'minfactor' and 'maxfactor' in params object"
+        );
+    if (minFactor > maxFactor) throw new Error('min must be <= max');
     let range = createRange(maxFactor, minFactor);
     let products = createProducts(range);
     let minMaxPalindrome: Palindromes = minMaxPalindromes(products);
@@ -110,7 +97,8 @@ export function generate({ maxFactor, minFactor = 0 }: Input): Palindromes {
 }
 
 let palindromes = generate({
-    maxFactor: 9,
+    maxFactor: 15,
+    minFactor: 15,
 });
 
 console.log(palindromes);
